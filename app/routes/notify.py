@@ -1,3 +1,0 @@
-# FastAPI router for notification-related endpoints
-
-# ...existing code...
