@@ -1,0 +1,3 @@
+# FastAPI router for product-related endpoints
+
+# ...existing code...
