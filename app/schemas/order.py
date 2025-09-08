@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional
-from datetime import datetime
+
 from enum import Enum
 
 class OrderStatus(str, Enum):
@@ -23,7 +23,7 @@ class OrderCreate(OrderBase):
 
 class OrderOut(OrderBase):
     id: int
-    created_at: datetime
+
 
     class Config:
         orm_mode = True
@@ -41,7 +41,7 @@ class PaymentCreate(PaymentBase):
 
 class PaymentOut(PaymentBase):
     id: int
-    created_at: datetime
+
 
     class Config:
         orm_mode = True

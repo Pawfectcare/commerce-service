@@ -3,7 +3,7 @@ from sqlalchemy import (
     Integer,
     String,
     Numeric,
-    DateTime,
+    # DateTime removed
     ForeignKey,
     func
 )
@@ -18,11 +18,7 @@ class Order(Base):
     user_id = Column(Integer, nullable=False, index=True)
     total_amount = Column(Numeric(10, 2), nullable=False)
     status = Column(String, nullable=False, server_default="PENDING_PAYMENT")
-    created_at = Column(
-        DateTime,
-        nullable=False,
-        server_default=func.now()
-    )
+
 
     payments = relationship("Payment", back_populates="order")
 
@@ -36,10 +32,6 @@ class Payment(Base):
     provider = Column(String, nullable=False)
     status = Column(String, nullable=False)
     transaction_id = Column(String, unique=True, index=True, nullable=True)
-    created_at = Column(
-        DateTime,
-        nullable=False,
-        server_default=func.now()
-    )
+
 
     order = relationship("Order", back_populates="payments")

@@ -19,9 +19,21 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     db.refresh(db_product)
     return db_product
 
+
 @router.get("/", response_model=List[ProductOut])
 def read_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     products = db.query(Product).offset(skip).limit(limit).all()
+    return products
+
+@router.get("/by-category/{category}", response_model=List[ProductOut])
+def list_products_by_category(category: str, db: Session = Depends(get_db)):
+    """
+    List products by category (food, toys, grooming).
+    """
+    allowed = {"food", "toys", "grooming"}
+    if category not in allowed:
+        raise HTTPException(status_code=400, detail=f"Category must be one of: {', '.join(allowed)}")
+    products = db.query(Product).filter(Product.category == category).all()
     return products
 
 @router.get("/{product_id}", response_model=ProductOut)

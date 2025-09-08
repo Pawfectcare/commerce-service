@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional
-from datetime import datetime
+
 
 class CartBase(BaseModel):
     user_id: int
@@ -15,7 +15,7 @@ class CartUpdate(BaseModel):
 
 class CartOut(CartBase):
     id: int
-    created_at: datetime
+
 
     class Config:
         orm_mode = True

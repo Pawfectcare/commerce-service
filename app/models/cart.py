@@ -1,7 +1,7 @@
 from sqlalchemy import (
     Column,
     Integer,
-    DateTime,
+    # DateTime removed
     ForeignKey,
     UniqueConstraint,
     CheckConstraint,
@@ -16,11 +16,7 @@ class Cart(Base):
     user_id = Column(Integer, nullable=False, index=True)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     quantity = Column(Integer, nullable=False, server_default='1')
-    created_at = Column(
-        DateTime,
-        nullable=False,
-        server_default=func.now()
-    )
+
 
     __table_args__ = (
         UniqueConstraint('user_id', 'product_id', name='_user_product_uc'),
