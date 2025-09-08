@@ -30,10 +30,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(products.router, prefix="/products", tags=["Products"])
-app.include_router(cart.router, prefix="/cart", tags=["Shopping Cart"])
-app.include_router(orders.router, prefix="/orders", tags=["Orders"])
-app.include_router(payments.router, prefix="/payments", tags=["Payments"])
+app.include_router(products.router)
+app.include_router(cart.router)
+app.include_router(orders.router)
+app.include_router(payments.router)
 
 
 @app.get("/", tags=["Root"])
