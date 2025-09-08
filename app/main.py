@@ -1,4 +1,42 @@
-# Entry point for FastAPI application
+import logging
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.routers import products, cart, orders, payments
 
-# ...existing code...
-# write some code 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Commerce Service is starting up...")
+    yield
+    logger.info("Commerce Service is shutting down...")
+
+
+app = FastAPI(
+    title="Commerce Service",
+    description="A modern, high-performance API for e-commerce operations.",
+    version="1.0.0",
+    lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(products.router, prefix="/products", tags=["Products"])
+app.include_router(cart.router, prefix="/cart", tags=["Shopping Cart"])
+app.include_router(orders.router, prefix="/orders", tags=["Orders"])
+app.include_router(payments.router, prefix="/payments", tags=["Payments"])
+
+
+@app.get("/", tags=["Root"])
+async def read_root():
+    return {"message": "Commerce Service is running"}
+
