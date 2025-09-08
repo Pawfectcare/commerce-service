@@ -35,6 +35,12 @@ def list_products_by_category(category: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail=f"Category must be one of: {', '.join(allowed)}")
     products = db.query(Product).filter(Product.category == category).all()
     return products
+@router.get("/products/", response_model=List[ProductOut])
+def get_products(product_ids: List[int], db: Session = Depends(get_db)):
+    products = db.query(Product).filter(Product.id.in_(product_ids)).all()
+    if not products:
+        raise HTTPException(status_code=404, detail="Products not found")
+    return products
 
 @router.get("/{product_id}", response_model=ProductOut)
 def read_product(product_id: int, db: Session = Depends(get_db)):
@@ -68,3 +74,6 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"detail": "Product deleted successfully"}
 
+@router.post("/shop/pay/{user_id}")
+async def process_payment(user_id: int):
+    return {"message": "Payment successful", "user_id": user_id}
