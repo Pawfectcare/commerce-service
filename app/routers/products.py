@@ -74,6 +74,3 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"detail": "Product deleted successfully"}
 
-@router.post("/shop/pay/{user_id}")
-async def process_payment(user_id: int):
-    return {"message": "Payment successful", "user_id": user_id}

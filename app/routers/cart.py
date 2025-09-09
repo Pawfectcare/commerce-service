@@ -82,3 +82,18 @@ def remove_item_from_cart(cart_id: int, db: Session = Depends(get_db)):
     db.commit()
     return
 
+@router.post("/shop/pay/{user_id}")
+async def process_payment(user_id: int, db: Session = Depends(get_db)):
+   
+    db_cart_items = db.query(Cart).filter(Cart.user_id == user_id).all()
+
+    if not db_cart_items:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cart is already empty")
+
+    
+    for item in db_cart_items:
+        db.delete(item)
+
+    db.commit()
+    return {"message": "Payment processed and cart cleared"}
+
