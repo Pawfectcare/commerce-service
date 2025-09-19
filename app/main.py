@@ -2,7 +2,7 @@ import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import products, cart, orders, payments
+from app.routers import products, cart
 from app.core.database import Base, engine
 
 Base.metadata.create_all(bind=engine)
@@ -27,16 +27,15 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+       allow_origins=["http://localhost:4200"],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["Content-Type", "Authorization"]
 )
 
 app.include_router(products.router)
 app.include_router(cart.router)
-app.include_router(orders.router)
-app.include_router(payments.router)
+
 
 
 @app.get("/", tags=["Root"])

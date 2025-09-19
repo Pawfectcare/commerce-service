@@ -5,7 +5,7 @@ from typing import List
 from app.core.database import get_db
 from app.models.product import Product
 from app.schemas.product import ProductCreate, ProductOut, ProductUpdate
-
+from app.models.Order import Order
 router = APIRouter(
     prefix="/shop/products",
     tags=["products"]
@@ -28,9 +28,9 @@ def read_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 @router.get("/by-category/{category}", response_model=List[ProductOut])
 def list_products_by_category(category: str, db: Session = Depends(get_db)):
     """
-    List products by category (food, toys, grooming).
+    List products by category (Food, Toys, Grooming).
     """
-    allowed = {"food", "toys", "grooming"}
+    allowed = {"Food", "Toys", "Grooming"}
     if category not in allowed:
         raise HTTPException(status_code=400, detail=f"Category must be one of: {', '.join(allowed)}")
     products = db.query(Product).filter(Product.category == category).all()

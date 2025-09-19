@@ -8,7 +8,7 @@ from app.core.database import get_db
 from app.models.cart import Cart
 from app.models.product import Product
 from app.schemas.cart import CartCreate, CartOut, CartUpdate
-
+from app.models.Order import Order
 router = APIRouter(
     prefix="/shop/cart",
     tags=["cart"]
@@ -40,6 +40,7 @@ def add_item_to_cart(cart: CartCreate, db: Session = Depends(get_db)):
     db.add(db_cart_item)
     db.commit()
     db.refresh(db_cart_item)
+    print("Inserted cart:", db_cart_item.__dict__)
     return db_cart_item
 @router.get("/{user_id}", response_model=List[CartWithProductOut])
 def get_cart_items(user_id: int, db: Session = Depends(get_db)):
@@ -82,7 +83,22 @@ def remove_item_from_cart(cart_id: int, db: Session = Depends(get_db)):
     db.commit()
     return
 
-@router.post("/shop/pay/{user_id}")
+
+@router.post("/orders")
+def create_order(order_data: dict, db: Session = Depends(get_db)):
+    new_order = Order(
+        user_id=order_data["userId"],
+        cart=order_data["cart"],   # cart array from frontend
+        total=order_data["total"]
+    )
+    db.add(new_order)
+    db.commit()
+    db.refresh(new_order)
+    return {"message": "Order placed successfully", "order_id": new_order.id}
+
+
+
+@router.post("/pay/{user_id}")
 async def process_payment(user_id: int, db: Session = Depends(get_db)):
    
     db_cart_items = db.query(Cart).filter(Cart.user_id == user_id).all()
